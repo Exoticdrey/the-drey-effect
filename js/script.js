@@ -1081,7 +1081,7 @@ Thank you!`;
         resetBookingForm();
         
         // Redirect to WhatsApp
-        window.location.href = whatsappUrl;
+        window.open = (whatsappUrl, '_blank');
         
         // Reset button state (in case redirect is canceled)
         if (submitBtn && submitText) {
