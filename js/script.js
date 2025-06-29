@@ -1,5 +1,5 @@
 // The Drey Effect - Main JavaScript File
-
+const WHATSAPP_NUMBER = "2349122376602";  // Replace with your real number here
 // Global variables
 let currentBookingsLeft = 20;
 let totalPrice = 0;
@@ -987,7 +987,7 @@ window.closeSuccessModal = closeSuccessModal;
 
 
 
-const WHATSAPP_NUMBER = "2349122376602";  // Replace with your real number here
+
 
 
 function submitBookingForm() {
