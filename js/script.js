@@ -608,6 +608,12 @@ function validateBookingForm() {
     return isValid;
 }
 
+
+
+ // Redirect to WhatsApp
+        window.open(whatsappUrl, '_blank');
+
+
 // Show field error
 function showFieldError(field, message) {
     field.classList.add('error');
@@ -653,40 +659,7 @@ function showFormError(message) {
     errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Submit booking form
-function submitBookingForm() {
-    console.log("🚀 Form submission started"); // <== Add this line first
 
-    const submitBtn = document.querySelector('.booking-form button[type="submit"]');
-    const submitText = document.getElementById('submitText');
-    
-    // Show loading state
-    if (submitBtn && submitText) {
-        submitBtn.disabled = true;
-        submitText.textContent = 'Processing...';
-    }
-    
-    // Simulate form submission
-    setTimeout(() => {
-        // Update bookings counter
-        if (currentBookingsLeft > 0) {
-            currentBookingsLeft--;
-            updateBookingsCounter();
-        }
-        
-        // Show success message
-        showBookingSuccess();
-        
-        // Reset form
-        resetBookingForm();
-        
-        // Reset button state
-        if (submitBtn && submitText) {
-            submitBtn.disabled = false;
-            submitText.textContent = 'Book Appointment';
-        }
-    }, 2000);
-}
 
 // Show booking success
 function showBookingSuccess() {
@@ -1061,8 +1034,7 @@ Thank you!`;
         // Reset form
         resetBookingForm();
         
-        // Redirect to WhatsApp
-        window.open(whatsappUrl, '_blank');
+       
         
         // Reset button state (in case redirect is canceled)
         if (submitBtn && submitText) {
