@@ -335,28 +335,7 @@ function setupFormInteractions() {
     setupAllOptionGroups();
 }
 
-// Get elements
-const fileInput = document.getElementById('referencePhoto');
-const fileDisplay = document.querySelector('.file-upload-display');
 
-fileInput.addEventListener('change', function() {
-  const file = this.files[0];
-  if (file) {
-    // Option 1: Show file name
-    fileDisplay.innerHTML = `<i class="fas fa-file-image"></i> ${file.name}`;
-
-    // Option 2: Show preview image
-    /*
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      fileDisplay.innerHTML = `<img src="${e.target.result}" alt="Reference Photo Preview" style="max-width:100%; max-height:150px;">`;
-    }
-    reader.readAsDataURL(file);
-    */
-  } else {
-    fileDisplay.innerHTML = `<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag and drop</span>`;
-  }
-});
 
 
 // Generic option selection setup
@@ -1090,3 +1069,9 @@ Thank you!`;
         }
     }, 1000);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupBookingForm();        // sets up interactions, price calc, etc.
+    setupFormValidation();     // now your form will work!
+});
+
