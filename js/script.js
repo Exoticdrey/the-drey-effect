@@ -655,6 +655,8 @@ function showFormError(message) {
 
 // Submit booking form
 function submitBookingForm() {
+    console.log("🚀 Form submission started"); // <== Add this line first
+
     const submitBtn = document.querySelector('.booking-form button[type="submit"]');
     const submitText = document.getElementById('submitText');
     
