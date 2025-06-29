@@ -1072,7 +1072,8 @@ Thank you!`;
     }, 1000);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOM loaded");
     setupBookingForm();        // sets up interactions, price calc, etc.
     setupFormValidation();     // now your form will work!
 });
