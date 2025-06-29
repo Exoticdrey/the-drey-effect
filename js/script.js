@@ -1,5 +1,5 @@
 // The Drey Effect - Main JavaScript File
-const WHATSAPP_NUMBER = "2349122376602";  // Replace with your real number here
+
 // Global variables
 let currentBookingsLeft = 20;
 let totalPrice = 0;
@@ -610,9 +610,6 @@ function validateBookingForm() {
 
 
 
- // Redirect to WhatsApp
-        window.open(whatsappUrl, '_blank');
-
 
 // Show field error
 function showFieldError(field, message) {
@@ -942,7 +939,7 @@ window.closeSuccessModal = closeSuccessModal;
 
 
 
-
+const WHATSAPP_NUMBER = "2349122376602";  // Replace with your real number here
 
 function submitBookingForm() {
     const submitBtn = document.querySelector('.booking-form button[type="submit"]');
@@ -1022,6 +1019,11 @@ Thank you!`;
     
     // WhatsApp URL
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+    
+    // Redirect to WhatsApp
+    window.open(whatsappUrl, '_blank');
+
     
     // Simulate processing delay, then redirect
     setTimeout(() => {
