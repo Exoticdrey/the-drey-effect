@@ -1062,7 +1062,7 @@ Thank you!`;
         resetBookingForm();
         
         // Redirect to WhatsApp
-        window.open = (whatsappUrl, '_blank');
+        window.open(whatsappUrl, '_blank');
         
         // Reset button state (in case redirect is canceled)
         if (submitBtn && submitText) {
