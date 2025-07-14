@@ -3,6 +3,8 @@
 // Global variables
 let currentBookingsLeft = 20;
 let totalPrice = 0;
+let finalPrice = 0;
+let discountAmount = 0;
 let basePrice = 0;
 let selectedOptions = {
     material: null,
@@ -456,11 +458,14 @@ function setupCheckboxOptions() {
 
 // Update array options (nail art, add-ons)
 function updateArrayOption(optionType, value, price, isChecked) {
-    if (isChecked) {
-        selectedOptions[optionType].push({ name: value, price });
-    } else {
-        selectedOptions[optionType] = selectedOptions[optionType].filter(item => item.name !== value);
-    }
+  const arr = selectedOptions[optionType];
+  if (isChecked) {
+-    arr.push({ name: value, price });
++    if (!arr.some(item => item.name === value))
++      arr.push({ name: value, price });
+  } else {
+    selectedOptions[optionType] = arr.filter(item => item.name !== value);
+  }
 }
 
 // Setup price calculation
@@ -516,23 +521,13 @@ function updatePricing() {
     totalPrice = total;
     
     // Apply discount if eligible
-    const discountSection = document.getElementById('discountSection');
-    const discountAmount = document.getElementById('discountAmount');
-    
     if (currentBookingsLeft > 0) {
-        const discount = Math.round(total * 0.2);
-        total -= discount;
-        
-        if (discountSection && discountAmount) {
-            discountSection.style.display = 'block';
-            discountAmount.textContent = '-₦' + discount;
-        }
-    } else if (discountSection) {
-        discountSection.style.display = 'none';
-    }
-    
-    // Update display
-    updatePriceDisplay(total);
+      discountAmount = Math.round(total * 0.2);
+    } else discountAmount = 0;
+    finalPrice = total - discountAmount;
+
+    // Use finalPrice when updating UI:
+    updatePriceDisplay(finalPrice);
 }
 
 // Add price item to breakdown
@@ -986,7 +981,7 @@ function submitBookingForm() {
     }
     
     // Total price (show final after discount if any)
-    const totalPayment = totalPrice;
+    const totalPayment = finalPrice;
     
     // Payment option text
     let paymentText = "";
