@@ -3,6 +3,7 @@
 // Global variables
 let currentBookingsLeft = 20;
 let totalPrice = 0;
+let finalPrice = 0;
 let basePrice = 0;
 let selectedOptions = {
     material: null,
@@ -438,26 +439,36 @@ function setupCheckboxOptions() {
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const name = this.getAttribute('name');
-            const value = this.value;
-            const price = parseInt(this.getAttribute('data-price')) || 0;
-            
-            if (name === 'nailArt') {
-                updateArrayOption('nailArt', value, price, this.checked);
-            } else if (name === 'addons') {
-                updateArrayOption('addons', value, price, this.checked);
-            }
-            
-            updatePricing();
-        });
+        // Remove existing event listeners to prevent duplicates
+        checkbox.removeEventListener('change', handleCheckboxChange);
+        checkbox.addEventListener('change', handleCheckboxChange);
     });
+}
+
+// Separate function to handle checkbox changes
+function handleCheckboxChange(event) {
+    const checkbox = event.target;
+    const name = checkbox.getAttribute('name');
+    const value = checkbox.value;
+    const price = parseInt(checkbox.getAttribute('data-price')) || 0;
+    
+    if (name === 'nailArt') {
+        updateArrayOption('nailArt', value, price, checkbox.checked);
+    } else if (name === 'addons') {
+        updateArrayOption('addons', value, price, checkbox.checked);
+    }
+    
+    updatePricing();
 }
 
 // Update array options (nail art, add-ons)
 function updateArrayOption(optionType, value, price, isChecked) {
     if (isChecked) {
-        selectedOptions[optionType].push({ name: value, price });
+        // Check if item already exists to prevent duplicates
+        const existingItem = selectedOptions[optionType].find(item => item.name === value);
+        if (!existingItem) {
+            selectedOptions[optionType].push({ name: value, price: price });
+        }
     } else {
         selectedOptions[optionType] = selectedOptions[optionType].filter(item => item.name !== value);
     }
@@ -493,6 +504,14 @@ function updatePricing() {
         }
     }
     
+    // Shape
+    if (selectedOptions.shape) {
+        total += selectedOptions.shape.price;
+        if (selectedOptions.shape.price > 0) {
+            addPriceItem('Shape (' + selectedOptions.shape.name + ')', selectedOptions.shape.price);
+        }
+    }
+    
     // Base style
     if (selectedOptions.baseStyle) {
         total += selectedOptions.baseStyle.price;
@@ -501,19 +520,31 @@ function updatePricing() {
         }
     }
     
-    // Nail art
+    // Color palette
+    if (selectedOptions.colorPalette) {
+        total += selectedOptions.colorPalette.price;
+        if (selectedOptions.colorPalette.price > 0) {
+            addPriceItem('Color Palette (' + selectedOptions.colorPalette.name + ')', selectedOptions.colorPalette.price);
+        }
+    }
+    
+    // Nail art (avoid duplicates)
     selectedOptions.nailArt.forEach(art => {
         total += art.price;
         addPriceItem('Nail Art (' + art.name + ')', art.price);
     });
     
-    // Add-ons
+    // Add-ons (avoid duplicates)
     selectedOptions.addons.forEach(addon => {
         total += addon.price;
         addPriceItem('Add-on (' + addon.name + ')', addon.price);
     });
     
+    // Store original total price
     totalPrice = total;
+    
+    // Calculate final price with discount
+    let finalTotal = total;
     
     // Apply discount if eligible
     const discountSection = document.getElementById('discountSection');
@@ -521,7 +552,7 @@ function updatePricing() {
     
     if (currentBookingsLeft > 0) {
         const discount = Math.round(total * 0.2);
-        total -= discount;
+        finalTotal = total - discount;
         
         if (discountSection && discountAmount) {
             discountSection.style.display = 'block';
@@ -531,21 +562,11 @@ function updatePricing() {
         discountSection.style.display = 'none';
     }
     
+    // Store final price
+    finalPrice = finalTotal;
+    
     // Update display
-    updatePriceDisplay(total);
-
-}
-
-// Add price item to breakdown
-function addPriceItem(description, price) {
-    const priceBreakdown = document.getElementById('priceBreakdown');
-    const priceItem = document.createElement('div');
-    priceItem.className = 'price-item';
-    priceItem.innerHTML = `
-        <span>${description}:</span>
-        <span>₦${price}</span>
-    `;
-    priceBreakdown.appendChild(priceItem);
+    updatePriceDisplay(finalTotal);
 }
 
 // Update price display
@@ -558,6 +579,7 @@ function updatePriceDisplay(total) {
     }
     
     if (depositAmountElement) {
+        // Use the final price (after discount) for deposit calculation
         const deposit = Math.round(total / 3);
         depositAmountElement.textContent = '₦' + deposit;
     }
@@ -705,12 +727,22 @@ function resetBookingForm() {
         addons: []
     };
     
+    // Reset prices
+    totalPrice = 0;
+    finalPrice = 0;
+    basePrice = 0;
+    
     // Remove active classes
     document.querySelectorAll('.option-item, .color-item').forEach(item => {
         item.classList.remove('active');
     });
     
-    // Reset pricing
+    // Uncheck all checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Reset pricing display
     updatePricing();
 }
 
@@ -1046,6 +1078,8 @@ Thank you!`;
         }
     }, 1000);
 }
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM loaded");
