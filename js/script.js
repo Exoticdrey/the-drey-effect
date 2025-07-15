@@ -1029,14 +1029,20 @@ function submitBookingForm() {
         selectionsText += `Add-ons: None\n`;
     }
     
-    // Total price (show final after discount if any)
-    const totalPayment = finalPrice;
-    
-    // Payment option text
+    // Payment option text + dynamic total
     let paymentText = "";
-    if(paymentOption === "full") paymentText = "Pay Full Amount Now";
-    else if(paymentOption === "deposit") paymentText = "Pay Deposit Now (Remaining at appointment)";
-    else if(paymentOption === "later") paymentText = "Reserve Now, Pay Deposit Within 24 Hours";
+    let totalPayment = finalPrice;
+    let deposit = Math.round(finalPrice / 3);
+
+    if (paymentOption === "full") {
+        paymentText = "Pay Full Amount Now";
+    } else if (paymentOption === "deposit") {
+        paymentText = `Pay Deposit Now (₦${deposit}) — Remaining at appointment`;
+        totalPayment = deposit;
+    } else if (paymentOption === "later") {
+        paymentText = `Reserve Now, Pay Deposit Within 24 Hours (₦${deposit})`;
+        totalPayment = deposit;
+    }
     
     // Compose message
     const message = 
