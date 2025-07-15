@@ -1019,7 +1019,7 @@ function submitBookingForm() {
     }
     
     // Total price (show final after discount if any)
-    const totalPayment = totalPrice;
+    const totalPayment = finalPrice;
     
     // Payment option text
     let paymentText = "";
