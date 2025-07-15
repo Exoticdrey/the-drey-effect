@@ -479,6 +479,16 @@ function setupPriceCalculation() {
     updatePricing(); // Initial calculation
 }
 
+function addPriceItem(label, price) {
+    const priceBreakdown = document.getElementById('priceBreakdown');
+    if (!priceBreakdown) return;
+
+    const item = document.createElement('div');
+    item.classList.add('price-item');
+    item.innerHTML = `<span>${label}</span><span>₦${price}</span>`;
+    priceBreakdown.appendChild(item);
+}
+
 // Update pricing display
 function updatePricing() {
     let total = 0;
@@ -569,15 +579,6 @@ function updatePricing() {
     updatePriceDisplay(finalTotal);
 }
 
-function addPriceItem(label, price) {
-    const priceBreakdown = document.getElementById('priceBreakdown');
-    if (!priceBreakdown) return;
-
-    const item = document.createElement('div');
-    item.classList.add('price-item');
-    item.innerHTML = `<span>${label}</span><span>₦${price}</span>`;
-    priceBreakdown.appendChild(item);
-}
 
 // Update price display
 function updatePriceDisplay(total) {
